@@ -5,56 +5,56 @@
 
 {
   imports =
-    [ (modulesPath + "/installer/scan/not-detected.nix")
+    [ (modulesPath + "/profiles/qemu-guest.nix")
     ];
 
-  boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "thunderbolt" "usb_storage" "sd_mod" ];
+  boot.initrd.availableKernelModules = [ "ata_piix" "uhci_hcd" "virtio_pci" "virtio_scsi" "sd_mod" "sr_mod" ];
   boot.initrd.kernelModules = [ "dm-snapshot" ];
-  boot.kernelModules = [ "kvm-amd" ];
+  boot.kernelModules = [ ];
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =
-    { device = "/dev/systemvg/root";
+    { device = "/dev/disk/by-uuid/d82227cf-1e1e-4eac-9c9d-57be7285ea45";
       fsType = "ext4";
     };
 
   fileSystems."/boot" =
-    { device = "/dev/systemvg/boot";
+    { device = "/dev/disk/by-uuid/13558a6b-0989-41d8-a7da-549682fee2b0";
       fsType = "ext4";
     };
 
   fileSystems."/home" =
-    { device = "/dev/systemvg/home";
+    { device = "/dev/disk/by-uuid/87ef2a1f-561e-4116-8388-ce6d32bd7f38";
       fsType = "btrfs";
     };
 
   fileSystems."/var" =
-    { device = "/dev/systemvg/var";
-      fsType = "ext4";
-    };
-
-  fileSystems."/var/log" =
-    { device = "/dev/systemvg/varlog";
-      fsType = "ext4";
-    };
-
-  fileSystems."/var/log/audit" =
-    { device = "/dev/systemvg/varlogaudit";
+    { device = "/dev/disk/by-uuid/8d794dcb-f517-440c-9aa5-09bc123f4e14";
       fsType = "ext4";
     };
 
   fileSystems."/var/tmp" =
-    { device = "/dev/systemvg/vartmp";
+    { device = "/dev/disk/by-uuid/9c6bc3a4-6f02-4920-bf66-4e0cf4ff94c0";
+      fsType = "ext4";
+    };
+
+  fileSystems."/var/log" =
+    { device = "/dev/disk/by-uuid/708cb667-c75a-45a6-a640-2ceb5e98e1d0";
+      fsType = "ext4";
+    };
+
+  fileSystems."/var/log/audit" =
+    { device = "/dev/disk/by-uuid/0a41fba8-458d-4fe7-9164-499ba6135f18";
       fsType = "ext4";
     };
 
   fileSystems."/efi" =
-    { device = "/dev/disk/by-uuid/2FAC-7454";
+    { device = "/dev/disk/by-uuid/4ABE-1FAE";
       fsType = "vfat";
     };
 
   swapDevices =
-    [ { device = "/dev/systemvg/swap"; }
+    [ { device = "/dev/disk/by-uuid/c0f12043-21bb-4cf7-bb8d-02f9a5e53453"; }
     ];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
@@ -62,7 +62,7 @@
   # still possible to use this option, but it's recommended to use it in conjunction
   # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
   networking.useDHCP = lib.mkDefault true;
+  # networking.interfaces.ens18.useDHCP = lib.mkDefault true;
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-  hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 }

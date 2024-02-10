@@ -2,10 +2,7 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ config, lib, pkgs, ... }:
-let
-  user = "sophie";
-in
+{ config, lib, pkgs, user, ... }:
 {
   imports =
     [ # Include the results of the hardware scan.
@@ -30,6 +27,8 @@ in
     interfaces.wlp1s0.useDHCP = lib.mkDefault true;
   };
 
+  systemd.network.wait-online.anyInterface = true;
+
   # Set your time zone.
   time.timeZone = "Europe/London";
 
@@ -53,41 +52,26 @@ in
   # services.xserver.libinput.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.${user} = {
+  users.users.sophie = {
     isNormalUser = true;
     extraGroups = [ "wheel" "video" "audio" "input" ];
   };
-
-#  home-manager.users.${user} = { pkgs, ... }: {
-#    home = {    
-#      packages = with pkgs; [ htop firefox git ];
-#      stateVersion = "23.11";
-#    };
-#    programs = {
-#      rbw = {
-#        enable = true;
-#        settings = {
-#          email = "ben@benstanderline.com";
-#          lock_timeout = 1800;
-#          base_url = "https://vaultwarden.benstanderline.com";
-#          pinentry = "curses";
-#        };
-#      };
-#    };
-#  };
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     emacs
+    git
     pkgs.sbctl
     vim
     wget
   ];
 
+  programs.sway.enable = true;
+
   boot.initrd.luks.devices = {
     root = {
-      device = "/dev/disk/by-uuid/c4f03d21-a36e-47b2-b21a-167110f438cf";
+      device = "/dev/disk/by-uuid/e2d6acd3-bac6-4a6f-98a7-dc7a914fe45b";
       preLVM = true;
       allowDiscards = true;
     };
