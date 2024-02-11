@@ -65,6 +65,7 @@
     pkgs.sbctl
     vim
     wget
+    firefox
   ];
 
   programs.sway.enable = true;
