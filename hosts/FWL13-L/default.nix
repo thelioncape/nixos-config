@@ -65,10 +65,10 @@
     pkgs.sbctl
     vim
     wget
-    firefox
   ];
 
   programs.sway.enable = true;
+  programs.firefox.enable = true;
 
   boot.initrd.luks.devices = {
     root = {
