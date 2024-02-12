@@ -57,6 +57,8 @@
     };
   };
 
+  home.file.".config/sway/config".source = ./hosts/FWL13-L/modules/swayconfig;
+
   home.stateVersion = "23.11";
 }
 
