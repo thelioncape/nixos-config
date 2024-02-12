@@ -65,6 +65,7 @@
     pkgs.sbctl
     vim
     wget
+    alacritty
   ];
 
   programs.sway.enable = true;
