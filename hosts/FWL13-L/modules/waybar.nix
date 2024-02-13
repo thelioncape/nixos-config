@@ -31,7 +31,8 @@
     };
     "sway/mode".format = "<span style=\"italic\">{}</span>";
     mpd = {
-      format = "{stateIcon} {consumeIcon}{randomIcon}{repeatIcon}{singleIcon}{artist} - {album} - {title} ({elapsedTime:%M:%S}/{totalTime:%M:%S}) (({songPosition}|{queueLength})) {volume}% ";
+      format = "{stateIcon} {consumeIcon}{randomIcon}{repeatIcon}{singleIcon}{artist} - {album} - {title} ({elapsedTime:%M:%S}/{totalTime:%M:%S}) ⸨{songPosition}|{queueLength}⸩ {volume}% ";
+      
     };
   };
 }

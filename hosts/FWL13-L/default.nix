@@ -68,6 +68,10 @@
     alacritty
   ];
 
+  fonts.packages = with pkgs; [
+    font-awesome
+  ];
+
   programs.sway.enable = true;
   programs.firefox.enable = true;
 
