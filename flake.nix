@@ -3,6 +3,12 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+
+    snowfall-lib = {
+      url = "github:snowfallorg/lib";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     home-manager = {
       url = github:nix-community/home-manager;
       inputs.nixpkgs.follows = "nixpkgs";
@@ -21,7 +27,6 @@
     nixosConfigurations = {
       FWL13-L = lib.nixosSystem {
         inherit system;
-        pkgs.callPackage ./apple-fonts.nix {}
         modules = [ ./hosts/FWL13-L
                     home-manager.nixosModules.home-manager {
                       home-manager.useGlobalPkgs = true;
