@@ -7,8 +7,8 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      ../../apple-fonts.nix
     ];
+
 
   boot = {
     kernelPackages = pkgs.linuxPackages_latest;
@@ -66,6 +66,7 @@
     pkgs.sbctl
     vim
     wget
+    (callPackage ../../apple-fonts.nix {})
   ];
 
   programs.sway.enable = true;
@@ -125,6 +126,5 @@
     package = pkgs.nixFlakes;
     extraOptions = "experimental-features = nix-command flakes";
   };
-
 }
 
