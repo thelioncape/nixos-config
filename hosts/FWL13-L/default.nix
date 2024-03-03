@@ -7,6 +7,7 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ../../apple-fonts.nix
     ];
 
   boot = {
@@ -65,11 +66,6 @@
     pkgs.sbctl
     vim
     wget
-    alacritty
-  ];
-
-  fonts.packages = with pkgs; [
-    font-awesome
   ];
 
   programs.sway.enable = true;
@@ -77,7 +73,7 @@
 
   boot.initrd.luks.devices = {
     root = {
-      device = "/dev/disk/by-uuid/e2d6acd3-bac6-4a6f-98a7-dc7a914fe45b";
+      device = "/dev/disk/by-uuid/c4f03d21-a36e-47b2-b21a-167110f438cf";
       preLVM = true;
       allowDiscards = true;
     };

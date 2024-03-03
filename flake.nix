@@ -21,6 +21,7 @@
     nixosConfigurations = {
       FWL13-L = lib.nixosSystem {
         inherit system;
+        pkgs.callPackage ./apple-fonts.nix {}
         modules = [ ./hosts/FWL13-L
                     home-manager.nixosModules.home-manager {
                       home-manager.useGlobalPkgs = true;
