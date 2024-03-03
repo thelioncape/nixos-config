@@ -30,6 +30,10 @@
       };
     };
     "sway/mode".format = "<span style=\"italic\">{}</span>";
+    "sway/scratchpad" = {
+      format = "{icon} {count}";
+      show-empty = false;
+    };
     mpd = {
       format = "{stateIcon} {consumeIcon}{randomIcon}{repeatIcon}{singleIcon}{artist} - {album} - {title} ({elapsedTime:%M:%S}/{totalTime:%M:%S}) ⸨{songPosition}|{queueLength}⸩ {volume}% ";
       
