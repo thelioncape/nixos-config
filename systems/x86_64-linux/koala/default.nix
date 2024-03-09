@@ -2,6 +2,12 @@
 with lib; {
   imports = [./hardware-configuration.nix];
 
+  custom = {
+    archetypes = {
+      workstation.enabled = true;
+    };
+  };
+
   boot = {
     kernelPackages = pkgs.linuxPackages_latest;
     loader = {
@@ -58,7 +64,8 @@ with lib; {
     pkgs.sbctl
     vim
     wget
-    (callPackage ../../apple-fonts.nix {})
+    alacritty
+#    (callPackage ../../apple-fonts.nix {})
   ];
 
   programs.sway.enable = true;
