@@ -1,9 +1,18 @@
 { options, config, lib, pkgs, ... }:
-with lib; let
+with lib;
+with lib.custom; let
   cfg = config.custom.archetypes.workstation;
 in {
   options.custom.archetypes.workstation = with types; {
     enable = mkBoolOpt false "Whether or not to enable the workstation archetype.";
+  };
+
+  config = mkIf cfg.enable {
+    custom = {
+      suites = {
+        common.enable = true;
+      };
+    };
   };
 }
 

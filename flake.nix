@@ -6,7 +6,7 @@
     home-manager.url = "github:nix-community/home-manager/master";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     snowfall-lib = {
-      url = "github:snowfallorg/lib";
+      url = "github:snowfallorg/lib/dev";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -36,7 +36,9 @@
 
       overlays = with inputs; [];
 
-      systems.modules.nixos = with inputs; [];
+      systems.modules.nixos = with inputs; [
+        home-manager.nixosModules.home-manager
+      ];
 
       templates = import ./templates {};
     };

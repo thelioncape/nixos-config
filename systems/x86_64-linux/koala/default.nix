@@ -1,10 +1,11 @@
 { lib, pkgs, ... }:
-with lib; {
+with lib;
+with lib.custom; {
   imports = [./hardware-configuration.nix];
 
   custom = {
     archetypes = {
-      workstation.enabled = true;
+      workstation.enable = true;
     };
   };
 

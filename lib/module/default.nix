@@ -28,4 +28,5 @@ with lib; rec {
   ##
   #@ Type -> Any -> String
   mkBoolOpt = mkOpt types.bool;
+}
 

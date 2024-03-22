@@ -1,10 +1,10 @@
-{ options, config, lib, pkgs, ... }:
+{ lib, config, pkgs, ... }:
 
 with lib;
-let cfg = config.custom.cli-apps.rbw;
-in
-{
-  options.custom.tools.rbw = with types; {
+with lib.custom; let
+  cfg = config.custom.cli-apps.rbw;
+in {
+  options.custom.cli-apps.rbw = with types; {
     enable = mkBoolOpt false "Whether or not to enable rbw.";
   };
 
