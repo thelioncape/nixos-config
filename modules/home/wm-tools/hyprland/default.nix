@@ -11,6 +11,26 @@ in {
   config = mkIf cfg.enable {
     wayland.windowManager.hyprland = {
       enable = true;
+      settings = {
+        "$mod" = "SUPER";
+        "$terminal" = "kitty";
+        bind = [
+          "$mod_SHIFT,E,exit"
+          "$mod,Enter,$terminal"
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+        ];
+      };
     };
   };
 }

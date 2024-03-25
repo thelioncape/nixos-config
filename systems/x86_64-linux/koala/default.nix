@@ -46,7 +46,10 @@ with lib.custom; {
 
   # Enable sound.
   sound.enable = true;
-  hardware.pulseaudio.enable = true;
+  services.pipewire.enable = true;
+  services.pipewire.audio.enable = true;
+  services.pipewire.wireplumber.enable = true;
+  services.pipewire.pulse.enable = true;
 
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;

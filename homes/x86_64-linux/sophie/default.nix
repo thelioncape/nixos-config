@@ -6,7 +6,7 @@ with lib.custom; {
       rbw.enable = true;
     };
     terminals = {
-      alacritty.enable = true;
+      kitty.enable = true;
     };
     wm-tools = {
       wofi.enable = true;
