@@ -10,7 +10,7 @@ with lib.custom; {
     };
     wm-tools = {
       wofi.enable = true;
-      sway.enable = true;
+      hyprland.enable = true;
       waybar.enable = true;
     };
     dev = {
