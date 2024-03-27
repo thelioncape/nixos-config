@@ -68,11 +68,9 @@ with lib.custom; {
     pkgs.sbctl
     vim
     wget
-    alacritty
 #    (callPackage ../../apple-fonts.nix {})
   ];
 
-  programs.sway.enable = true;
   programs.firefox.enable = true;
 
   boot.initrd.luks.devices = {

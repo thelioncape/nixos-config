@@ -16,7 +16,7 @@ in {
         "$terminal" = "kitty";
         bind = [
           "$mod_SHIFT,E,exit"
-          "$mod,Enter,$terminal"
+          "$mod,Enter,exec,$terminal"
           
           
           
