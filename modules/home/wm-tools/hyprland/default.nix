@@ -17,7 +17,15 @@ in {
         "$menu" = "wofi --show drun -i";
         input = {
           kb_layout = "gb";
+          kb_options = [ "ctrl:nocaps" ];
+          touchpad = { natural_scroll = true; };
         };
+        monitor = [
+          "eDP-1,2256x1504@60,0x0,1.566667"
+        ];
+        exec-once = [
+          "waybar"
+        ];
         bind = [
           "$mod_SHIFT,E,exit"
           "$mod,Return,exec,$terminal"
@@ -58,7 +66,6 @@ in {
           # Scratchpad
           "$mod,Minus,togglespecialworkspace,magic"
           "$mod_SHIFT,Minus,movetoworkspace,spacial:magic"
-
         ];
       };
     };

@@ -7,6 +7,7 @@ with lib.custom; {
     archetypes = {
       workstation.enable = true;
     };
+    windowManagers.hyprland.enable = true;
   };
 
   boot = {
