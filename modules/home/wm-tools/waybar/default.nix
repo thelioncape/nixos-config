@@ -3,6 +3,7 @@
 with lib;
 with lib.custom; let
   cfg = config.custom.wm-tools.waybar;
+  theme = getTheme (config.custom.theme);
 in {
   options.custom.wm-tools.waybar = with types; {
     enable = mkBoolOpt false "Whether or not to enable waybar.";
@@ -12,172 +13,170 @@ in {
     programs.waybar = {
       enable = true;
       settings = [{
-        mainBar = {
-          height = 30;
-          spacing = 4;
-          modules-left = [
-            "custom/startmenu"
-            "hyprland/window"
-            "pulseaudio"
-            "cpu"
-            "memory"
-          ];
-          modules-center = [
-            "network"
-            "custom/themeselector"
-            "pulseaudio"
-            "cpu"
-            "hyprland/workspaces"
-            "memory"
-            "disk"
-            "clock"
-          ];
-          modules-right = [
-            "custom/hyprbindings"
-            "custom/exit"
-            "idle_inhibitor"
-            "custom/themeselector"
-            "custom/notification"
-            "battery"
-            "clock"
-            "tray"
-          ];
+        height = 30;
+        spacing = 4;
+        modules-left = [
+          "custom/startmenu"
+          "hyprland/window"
+          "pulseaudio"
+          "cpu"
+          "memory"
+        ];
+        modules-center = [
+          "network"
+          "custom/themeselector"
+          "pulseaudio"
+          "cpu"
+          "hyprland/workspaces"
+          "memory"
+          "disk"
+          "clock"
+        ];
+        modules-right = [
+          "custom/hyprbindings"
+          "custom/exit"
+          "idle_inhibitor"
+          "custom/themeselector"
+          "custom/notification"
+          "battery"
+          "clock"
+          "tray"
+        ];
 
-          "hyperland/workspaces" = {
-            format = "{icon}";
-            format-icons = {
-              default = " ";
-              active = " ";
-              urgent = " ";
-            };
-            on-scroll-up = "hyprctl dispatch workspace e+1";
-            on-scroll-down = "hyprctl dispatch workspace e-1";
+        "hyperland/workspaces" = {
+          format = "{icon}";
+          format-icons = {
+            default = " ";
+            active = " ";
+            urgent = " ";
           };
-          "clock" = {
-            format = "{: %H:%M}";
-            tooltip = false;
+          on-scroll-up = "hyprctl dispatch workspace e+1";
+          on-scroll-down = "hyprctl dispatch workspace e-1";
+        };
+        "clock" = {
+          format = "{: %H:%M}";
+          tooltip = false;
+        };
+        "hyprland/window" = {
+          max-length = 25;
+          separate-outputs = false;
+        };
+        "memory" = {
+          interval = 5;
+          format = " {}%";
+          tooltip = true;
+        };
+        "cpu" = {
+          interval = 5;
+          format = " {usage:2}%";
+          tooltip = true;
+        };
+        "disk" = {
+          format = "  {free} / {total}";
+          tooltip = true;
+          on-click = "hyprctl dispatch 'exec alacritty -e broot -hipsw'";
+        };
+        "network" = {
+          format-icons = [ "󰤯" "󰤟" "󰤢" "󰤥" "󰤨" ];
+          format-ethernet = ": {bandwidthDownOctets}";
+          format-wifi = "{icon} {signalStrength}%";
+          format-disconnected = "󰤮";
+          tooltip = false;
+          on-click = "nm-applet";
+        };
+        "tray" = { spacing = 12; };
+        "pulseaudio" = {
+          format = "{icon} {volume}% {format_source}";
+          format-bluetooth = "{volume}% {icon} {format_source}";
+          format-bluetooth-muted = " {icon} {format_source}";
+          format-muted = " {format_source}";
+          format-source = " {volume}%";
+          format-source-muted = "";
+          format-icons = {
+            headphone = "";
+            hands-free = "";
+            headset = "";
+            phone = "";
+            portable = "";
+            car = "";
+            default = [ "" "" "" ];
           };
-          "hyprland/window" = {
-            max-length = 25;
-            separate-outputs = false;
+          on-click = "pavucontrol";
+        };
+        "custom/themeselector" = {
+          tooltip = false;
+          format = "";
+          # exec = "theme-selector";
+          on-click = "theme-selector";
+        };
+        "custom/startmenu" = {
+          tooltip = false;
+          format = "";
+          # exec = "rofi -show drun";
+          on-click = "rofi -show drun";
+        };
+        "idle_inhibitor" = {
+          format = "{icon}";
+          format-icons = {
+            activated = "";
+            deactivated = "";
           };
-          "memory" = {
-            interval = 5;
-            format = " {}%";
-            tooltip = true;
+          tooltip = "true";
+        };
+        "custom/notification" = {
+          tooltip = false;
+          format = "{icon} {}";
+          format-icons = {
+            notification = "<span foreground='red'><sup></sup></span>";
+            none = "";
+            dnd-notification = "<span foreground='red'><sup></sup></span>";
+            dnd-none = "";
+            inhibited-notification =
+              "<span foreground='red'><sup></sup></span>";
+            inhibited-none = "";
+            dnd-inhibited-notification =
+              "<span foreground='red'><sup></sup></span>";
+            dnd-inhibited-none = "";
           };
-          "cpu" = {
-            interval = 5;
-            format = " {usage:2}%";
-            tooltip = true;
+          return-type = "json";
+          exec-if = "which swaync-client";
+          exec = "swaync-client -swb";
+          on-click = "swaync-client -t";
+          escape = true;
+        };
+        "privacy" = {
+          icon-spacing = 4;
+          icon-size = 18;
+          transition-duration = 250;
+          modules = [
+            {
+              "type" = "screenshare";
+              "tooltip" = true;
+              "tooltip-icon-size" = 24;
+            }
+            {
+              "type" = "audio-out";
+              "tooltip" = true;
+              "tooltip-icon-size" = 24;
+            }
+            {
+              "type" = "audio-in";
+              "tooltip" = true;
+              "tooltip-icon-size" = 24;
+            }
+          ];
+        };
+        "battery" = {
+          states = {
+            warning = 30;
+            critical = 15;
           };
-          "disk" = {
-            format = "  {free} / {total}";
-            tooltip = true;
-            on-click = "hyprctl dispatch 'exec alacritty -e broot -hipsw'";
-          };
-          "network" = {
-            format-icons = [ "󰤯" "󰤟" "󰤢" "󰤥" "󰤨" ];
-            format-ethernet = ": {bandwidthDownOctets}";
-            format-wifi = "{icon} {signalStrength}%";
-            format-disconnected = "󰤮";
-            tooltip = false;
-            on-click = "nm-applet";
-          };
-          "tray" = { spacing = 12; };
-          "pulseaudio" = {
-            format = "{icon} {volume}% {format_source}";
-            format-bluetooth = "{volume}% {icon} {format_source}";
-            format-bluetooth-muted = " {icon} {format_source}";
-            format-muted = " {format_source}";
-            format-source = " {volume}%";
-            format-source-muted = "";
-            format-icons = {
-              headphone = "";
-              hands-free = "";
-              headset = "";
-              phone = "";
-              portable = "";
-              car = "";
-              default = [ "" "" "" ];
-            };
-            on-click = "pavucontrol";
-          };
-          "custom/themeselector" = {
-            tooltip = false;
-            format = "";
-            # exec = "theme-selector";
-            on-click = "theme-selector";
-          };
-          "custom/startmenu" = {
-            tooltip = false;
-            format = "";
-            # exec = "rofi -show drun";
-            on-click = "rofi -show drun";
-          };
-          "idle_inhibitor" = {
-            format = "{icon}";
-            format-icons = {
-              activated = "";
-              deactivated = "";
-            };
-            tooltip = "true";
-          };
-          "custom/notification" = {
-            tooltip = false;
-            format = "{icon} {}";
-            format-icons = {
-              notification = "<span foreground='red'><sup></sup></span>";
-              none = "";
-              dnd-notification = "<span foreground='red'><sup></sup></span>";
-              dnd-none = "";
-              inhibited-notification =
-                "<span foreground='red'><sup></sup></span>";
-              inhibited-none = "";
-              dnd-inhibited-notification =
-                "<span foreground='red'><sup></sup></span>";
-              dnd-inhibited-none = "";
-            };
-            return-type = "json";
-            exec-if = "which swaync-client";
-            exec = "swaync-client -swb";
-            on-click = "swaync-client -t";
-            escape = true;
-          };
-          "privacy" = {
-            icon-spacing = 4;
-            icon-size = 18;
-            transition-duration = 250;
-            modules = [
-              {
-                "type" = "screenshare";
-                "tooltip" = true;
-                "tooltip-icon-size" = 24;
-              }
-              {
-                "type" = "audio-out";
-                "tooltip" = true;
-                "tooltip-icon-size" = 24;
-              }
-              {
-                "type" = "audio-in";
-                "tooltip" = true;
-                "tooltip-icon-size" = 24;
-              }
-            ];
-          };
-          "battery" = {
-            states = {
-              warning = 30;
-              critical = 15;
-            };
-            format = "{icon} {capacity}%";
-            format-charging = "󰂄 {capacity}%";
-            format-plugged = "󱘖 {capacity}%";
-            format-icons = [ "󰁺" "󰁻" "󰁼" "󰁽" "󰁾" "󰁿" "󰂀" "󰂁" "󰂂" "󰁹" ];
-            on-click = "";
-            tooltip = false;
-          };
+          format = "{icon} {capacity}%";
+          format-charging = "󰂄 {capacity}%";
+          format-plugged = "󱘖 {capacity}%";
+          format-icons = [ "󰁺" "󰁻" "󰁼" "󰁽" "󰁾" "󰁿" "󰂀" "󰂁" "󰂂" "󰁹" ];
+          on-click = "";
+          tooltip = false;
         };
       }];
       style = ''

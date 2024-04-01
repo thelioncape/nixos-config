@@ -2,6 +2,7 @@
 with lib;
 with lib.custom; {
   custom = {
+    theme = "catppuccin-latte";
     cli-apps = {
       rbw.enable = true;
     };

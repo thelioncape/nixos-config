@@ -28,5 +28,8 @@ with lib; rec {
   ##
   #@ Type -> Any -> String
   mkBoolOpt = mkOpt types.bool;
+
+  ## Get theme from nix-colors
+
 }
 
