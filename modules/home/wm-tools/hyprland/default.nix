@@ -65,7 +65,7 @@ in {
           "$mod_SHIFT,0,movetoworkspace,10"
           # Scratchpad
           "$mod,Minus,togglespecialworkspace,magic"
-          "$mod_SHIFT,Minus,movetoworkspace,spacial:magic"
+          "$mod_SHIFT,Minus,movetoworkspace,special:magic"
         ];
       };
     };
