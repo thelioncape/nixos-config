@@ -12,6 +12,12 @@ in {
       suites = {
         common.enable = true;
       };
+      fonts = {
+        enable = true;
+        fonts = with pkgs; [
+          font-awesome
+        ];
+      };
     };
   };
 }

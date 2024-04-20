@@ -66,6 +66,9 @@ in {
           # Scratchpad
           "$mod,Minus,togglespecialworkspace,magic"
           "$mod_SHIFT,Minus,movetoworkspace,special:magic"
+          # Window Modifications
+          "$mod,F,fullscreen"
+          "$mod_SHIFT,Space,togglefloating"
         ];
       };
     };

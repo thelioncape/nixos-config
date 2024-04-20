@@ -3,7 +3,7 @@
 with lib;
 with lib.custom; let
   cfg = config.custom.wm-tools.waybar;
-  theme = getTheme (config.custom.theme);
+  theme = getTheme (config.custom.theme.name);
 in {
   options.custom.wm-tools.waybar = with types; {
     enable = mkBoolOpt false "Whether or not to enable waybar.";
@@ -13,80 +13,43 @@ in {
     programs.waybar = {
       enable = true;
       settings = [{
-        height = 30;
-        spacing = 4;
+        height = 42;
+        spacing = 0;
         modules-left = [
-          "custom/startmenu"
           "hyprland/window"
           "pulseaudio"
+          "backlight"
           "cpu"
           "memory"
+          "network"
         ];
         modules-center = [
-          "network"
-          "custom/themeselector"
-          "pulseaudio"
-          "cpu"
           "hyprland/workspaces"
-          "memory"
-          "disk"
-          "clock"
+          #"custom/themeselector"
+          #"pulseaudio"
+          #"cpu"
+          #"memory"
+          #"clock"
         ];
         modules-right = [
-          "custom/hyprbindings"
-          "custom/exit"
+          #"custom/hyprbindings"
+          #"custom/exit"
+          #"custom/notification"
           "idle_inhibitor"
           "custom/themeselector"
-          "custom/notification"
+          "disk#root"
+          "disk#home"
           "battery"
           "clock"
           "tray"
         ];
 
-        "hyperland/workspaces" = {
-          format = "{icon}";
-          format-icons = {
-            default = " ";
-            active = " ";
-            urgent = " ";
-          };
-          on-scroll-up = "hyprctl dispatch workspace e+1";
-          on-scroll-down = "hyprctl dispatch workspace e-1";
-        };
-        "clock" = {
-          format = "{: %H:%M}";
-          tooltip = false;
-        };
         "hyprland/window" = {
           max-length = 25;
           separate-outputs = false;
         };
-        "memory" = {
-          interval = 5;
-          format = " {}%";
-          tooltip = true;
-        };
-        "cpu" = {
-          interval = 5;
-          format = " {usage:2}%";
-          tooltip = true;
-        };
-        "disk" = {
-          format = "  {free} / {total}";
-          tooltip = true;
-          on-click = "hyprctl dispatch 'exec alacritty -e broot -hipsw'";
-        };
-        "network" = {
-          format-icons = [ "󰤯" "󰤟" "󰤢" "󰤥" "󰤨" ];
-          format-ethernet = ": {bandwidthDownOctets}";
-          format-wifi = "{icon} {signalStrength}%";
-          format-disconnected = "󰤮";
-          tooltip = false;
-          on-click = "nm-applet";
-        };
-        "tray" = { spacing = 12; };
         "pulseaudio" = {
-          format = "{icon} {volume}% {format_source}";
+          format = "{icon} {volume}%  {format_source}";
           format-bluetooth = "{volume}% {icon} {format_source}";
           format-bluetooth-muted = " {icon} {format_source}";
           format-muted = " {format_source}";
@@ -103,17 +66,48 @@ in {
           };
           on-click = "pavucontrol";
         };
-        "custom/themeselector" = {
-          tooltip = false;
-          format = "";
-          # exec = "theme-selector";
-          on-click = "theme-selector";
+        "backlight" = {
+          format = "{icon}  {percent}%";
+          format-icons = [ "" ];
         };
-        "custom/startmenu" = {
+        "cpu" = {
+          interval = 5;
+          format = " {usage:2}%";
+          tooltip = true;
+        };
+        "memory" = {
+          interval = 5;
+          format = "  {}%";
+          tooltip = true;
+        };
+        "network" = {
+          format-icons = [ "󰤯" "󰤟" "󰤢" "󰤥" "󰤨" ];
+          format-ethernet = ": {bandwidthDownOctets}";
+          format-wifi = "{icon}  {signalStrength}%";
+          format-disconnected = "󰤮";
           tooltip = false;
-          format = "";
-          # exec = "rofi -show drun";
-          on-click = "rofi -show drun";
+          on-click = "nm-applet";
+        };
+        "hyperland/workspaces" = {
+          format = "{icon}";
+          format-icons = {
+            default = " ";
+            active = " ";
+            urgent = " ";
+          };
+          on-scroll-up = "hyprctl dispatch workspace e+1";
+          on-scroll-down = "hyprctl dispatch workspace e-1";
+        };
+        "disk#root" = {
+          format = "/  {free}";
+          tooltip = true;
+          path = "/";
+#          on-click = "hyprctl dispatch 'exec alacritty -e broot -hipsw'";
+        };
+        "disk#home" = {
+          format = "  {free}";
+          tooltip = true;
+          path = "/home";
         };
         "idle_inhibitor" = {
           format = "{icon}";
@@ -122,6 +116,35 @@ in {
             deactivated = "";
           };
           tooltip = "true";
+        };
+        "custom/themeselector" = {
+          tooltip = false;
+          format = "";
+          # exec = "theme-selector";
+          on-click = "theme-selector";
+        };
+        "battery" = {
+          states = {
+            warning = 30;
+            critical = 15;
+          };
+          format = "{icon} {capacity}%";
+          format-charging = "󰂄 {capacity}%";
+          format-plugged = "󱘖 {capacity}%";
+          format-icons = [ "󰁺" "󰁻" "󰁼" "󰁽" "󰁾" "󰁿" "󰂀" "󰂁" "󰂂" "󰁹" ];
+          on-click = "";
+          tooltip = false;
+        };
+        "clock" = {
+          format = "{: %F %H:%M}";
+          tooltip = false;
+        };
+        "tray" = { spacing = 12; };
+        "custom/startmenu" = {
+          tooltip = false;
+          format = "";
+          # exec = "rofi -show drun";
+          on-click = "wofi -show drun -i";
         };
         "custom/notification" = {
           tooltip = false;
@@ -166,22 +189,10 @@ in {
             }
           ];
         };
-        "battery" = {
-          states = {
-            warning = 30;
-            critical = 15;
-          };
-          format = "{icon} {capacity}%";
-          format-charging = "󰂄 {capacity}%";
-          format-plugged = "󱘖 {capacity}%";
-          format-icons = [ "󰁺" "󰁻" "󰁼" "󰁽" "󰁾" "󰁿" "󰂀" "󰂁" "󰂂" "󰁹" ];
-          on-click = "";
-          tooltip = false;
-        };
       }];
       style = ''
         * {
-          font-size: 16px;
+          font-size: 12px;
           font-family: 'JetBrains Mono', Font Awesome;
               font-weight: 600;
         }
@@ -190,9 +201,50 @@ in {
               padding: 5px;
               border-radius: 15px;
               border: 2px solid #${theme.base0F};
-              border-bottom: 1px solid rgba(26,27,38,0);
               background-color: rgba(26,27,38,0.64);
               color: #${theme.base0F};
+        }
+        #window {
+              color: #${theme.base05};
+              background: #${theme.base00};
+              border-radius: 12px;
+              margin: 5px;
+              padding: 5px 10px;
+        }
+        #pulseaudio {
+              color: #${theme.base0D};
+              background: #${theme.base00};
+              border-radius: 12px 0px 0px 12px;
+              margin: 5px 0px 5px 5px;
+              padding: 2px 3px 2px 10px;
+        }
+        #backlight {
+              color: #${theme.base0C};
+              background: #${theme.base00};
+              border-radius: 0px 12px 12px 0px;
+              margin: 5px 5px 5px 0px;
+              padding: 2px 10px 2px 3px;
+        }
+        #cpu {
+              color: #${theme.base07};
+              background: #${theme.base00};
+              border-radius: 12px 0px 0px 12px;
+              margin: 5px 0px 5px 5px;
+              padding: 2px 5px 2px 10px;
+        }
+        #memory {
+              color: #${theme.base0F};
+              background: #${theme.base00};
+              border-radius: 0px;
+              margin: 5px 0px;
+              padding: 2px 5px;
+        }
+        #network {
+              color: #${theme.base09};
+              background: #${theme.base00};
+              border-radius: 0px 12px 12px 0px;
+              margin: 5px 5px 5px 0px;
+              padding: 2px 10px 2px 3px;
         }
         #workspaces {
               background: linear-gradient(180deg, #${theme.base00}, #${theme.base01});
@@ -235,74 +287,32 @@ in {
         tooltip label {
             color: #${theme.base07};
         }
-        #window {
-              color: #${theme.base05};
-              background: #${theme.base00};
-              border-radius: 0px 15px 50px 0px;
-              margin: 5px 5px 5px 0px;
-              padding: 2px 20px;
-        }
-        #memory {
-              color: #${theme.base0F};
-              background: #${theme.base00};
-              border-radius: 15px 50px 15px 50px;
-              margin: 5px;
-              padding: 2px 20px;
-        }
         #clock {
               color: #${theme.base0B};
               background: #${theme.base00};
-              border-radius: 15px 50px 15px 50px;
+              border-radius: 12px;
               margin: 5px;
-              padding: 2px 20px;
-        }
-        #idle_inhibitor {
-              color: #${theme.base0A};
-              background: #${theme.base00};
-              border-radius: 50px 15px 50px 15px;
-              margin: 5px;
-              padding: 2px 20px;
-        }
-        #cpu {
-              color: #${theme.base07};
-              background: #${theme.base00};
-              border-radius: 50px 15px 50px 15px;
-              margin: 5px;
-              padding: 2px 20px;
+              padding: 5px 10px;
         }
         #disk {
               color: #${theme.base03};
               background: #${theme.base00};
-              border-radius: 15px 50px 15px 50px;
-              margin: 5px;
-              padding: 2px 20px;
+              border-radius: 0px;
+              margin: 5px 0px;
+              padding: 2px 5px;
         }
         #battery {
               color: #${theme.base08};
               background: #${theme.base00};
-              border-radius: 15px;
-              margin: 5px;
-              padding: 2px 20px;
-        }
-        #network {
-              color: #${theme.base09};
-              background: #${theme.base00};
-              border-radius: 50px 15px 50px 15px;
-              margin: 5px;
-              padding: 2px 20px;
+              border-radius: 0px 12px 12px 0px;
+              margin: 5px 5px 5px 0px;
+              padding: 2px 10px 2px 3px;
         }
         #tray {
               color: #${theme.base05};
               background: #${theme.base00};
               border-radius: 15px 0px 0px 50px;
               margin: 5px 0px 5px 5px;
-              padding: 2px 20px;
-        }
-        #pulseaudio {
-              color: #${theme.base0D};
-              background: #${theme.base00};
-              border-radius: 50px 15px 50px 15px;
-              margin: 5px;
               padding: 2px 20px;
         }
         #custom-notification {
@@ -315,9 +325,9 @@ in {
         #custom-themeselector {
               color: #${theme.base0D};
               background: #${theme.base00};
-              border-radius: 15px 50px 15px 50px;
-              margin: 5px;
-              padding: 2px 20px;
+              border-radius: 0px;
+              margin: 5px 0px;
+              padding: 2px 5px;
           }
         #custom-startmenu {
               color: #${theme.base03};
@@ -329,9 +339,9 @@ in {
         #idle_inhibitor {
               color: #${theme.base09};
               background: #${theme.base00};
-              border-radius: 15px 50px 15px 50px;
-              margin: 5px;
-              padding: 2px 20px;
+              border-radius: 12px 0px 0px 12px;
+              margin: 5px 0px 5px 5px;
+              padding: 2px 10px 2px 10px;
         }
       '';
     };
