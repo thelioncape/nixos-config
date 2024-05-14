@@ -7,6 +7,9 @@ with lib.custom; {
     archetypes = {
       workstation.enable = true;
     };
+    suites = {
+      photography.enable = true;
+    };
     windowManagers.hyprland.enable = true;
   };
 
