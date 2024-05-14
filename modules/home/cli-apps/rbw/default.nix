@@ -14,7 +14,7 @@ in {
       settings = {
         base_url = "https://vaultwarden.benstanderline.com";
         email = "ben@benstanderline.com";
-        pinentry = "curses";
+        pinentry = pkgs.pinentry-tty;
       };
     };
   };
