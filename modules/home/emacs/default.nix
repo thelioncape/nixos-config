@@ -12,7 +12,6 @@ in {
     programs.emacs = {
       enable = true;
       
-      };
     };
   };
 }
