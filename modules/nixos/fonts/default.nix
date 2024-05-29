@@ -1,4 +1,4 @@
-{ lib, config, pkgs, ... }:
+{ lib, config, pkgs, inputs, ... }:
 with lib;
 with lib.custom; let
   cfg = config.custom.fonts;
@@ -15,11 +15,14 @@ in {
 
     environment.systemPackages = with pkgs; [font-manager];
 
-    fonts.packages = with pkgs; [
-      noto-fonts
-      noto-fonts-cjk-sans
-      noto-fonts-emoji
-      (nerdfonts.override {fonts = ["Hack"];})
+    fonts.packages = [
+      pkgs.emacs-all-the-icons-fonts
+      pkgs.nerdfonts
+      pkgs.noto-fonts
+      pkgs.noto-fonts-cjk-sans
+      pkgs.noto-fonts-emoji
+      (pkgs.nerdfonts.override {fonts = ["Hack"];})
+      inputs.apple-fonts
     ]
     ++ cfg.fonts;
   };

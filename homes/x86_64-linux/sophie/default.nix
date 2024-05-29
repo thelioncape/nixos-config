@@ -3,6 +3,7 @@ with lib;
 with lib.custom; {
   custom = {
     theme.name = "catppuccin-latte";
+    emacs.enable = true;
     cli-apps = {
       rbw.enable = true;
     };

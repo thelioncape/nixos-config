@@ -68,7 +68,6 @@ with lib.custom; {
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    emacs
     git
     pkgs.sbctl
     vim
