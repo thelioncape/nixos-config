@@ -136,7 +136,7 @@ in {
           tooltip = false;
         };
         "clock" = {
-          format = "{: %F %H:%M}";
+          format = " {:%F %H:%M}";
           tooltip = false;
         };
         "tray" = { spacing = 12; };
