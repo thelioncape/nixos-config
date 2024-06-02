@@ -11,6 +11,8 @@
     };
     nix-colors.url = "github:misterio77/nix-colors";
     apple-fonts.url = "github:braindefender/nix-apple-fonts";
+    nixos-generators.url = "github:nix-community/nixos-generators";
+    nixos-generators.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = inputs: let
