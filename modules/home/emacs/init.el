@@ -441,6 +441,9 @@
   :config
   (yas-global-mode 1))
 
+(use-package nix-mode
+  :mode "\\.nix\\'")
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
