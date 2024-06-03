@@ -6,7 +6,7 @@
     home-manager.url = "github:nix-community/home-manager/master";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     snowfall-lib = {
-      url = "github:snowfallorg/lib/dev";
+      url = "github:thelioncape/lib/main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-colors.url = "github:misterio77/nix-colors";
