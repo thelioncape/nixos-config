@@ -168,6 +168,12 @@
 (use-package all-the-icons-dired
   :hook (dired-mode . all-the-icons-dired-mode))
 
+(defun tlc/dired-init ()
+  "Function to run when dired is started."
+  (dired-hide-details-mode 1))
+
+(add-hook 'dired-mode-hook 'tlc/dired-init)
+
 ;;(use-package keepass-mode)
 
 (global-set-key (kbd "C-c t") 'vterm)
