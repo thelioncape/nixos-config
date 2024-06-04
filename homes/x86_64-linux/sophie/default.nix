@@ -4,7 +4,6 @@ with lib.custom; {
   custom = {
     theme.name = "catppuccin-latte";
     emacs.enable = true;
-    dev.nix-nil.enable = true;
     cli-apps = {
       rbw.enable = true;
     };
@@ -18,6 +17,8 @@ with lib.custom; {
     };
     dev = {
       git.enable = true;
+      nix-nil.enable = true;
+      ssh-agent.enable = true;
     };
   };
 }
