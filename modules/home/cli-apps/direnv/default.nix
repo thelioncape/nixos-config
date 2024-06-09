@@ -14,5 +14,8 @@ in {
       enableBashIntegration = true;
       nix-direnv.enable = true;
     };
+    home.file.".bashrc".text = ''
+      eval "$(direnv hook bash)"
+    '';
   };
 }
