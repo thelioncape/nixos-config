@@ -82,6 +82,7 @@
   :config
   (define-key lsp-mode-map (kbd "C-c l") lsp-command-map)
   (setq lsp-enable-snippet nil)
+  (setq lsp-disabled-clients '(php-ls))
   :hook
   '((lsp-mode . lsp-enable-which-key-integration)
     ((html-mode) . lsp-mode)
