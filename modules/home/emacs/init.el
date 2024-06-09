@@ -451,7 +451,11 @@
 (use-package nix-mode
   :mode "\\.nix\\'")
 
-(use-package php-mode)
+(use-package php-mode
+  :mode "\\.inc\\'"
+  :hook (php-mode . rainbow-delimiters-mode)
+  :config
+  (setq php-mode-template-compatibility nil))
 
 (use-package direnv
   :config
