@@ -452,6 +452,10 @@
 
 (use-package php-mode)
 
+(use-package direnv
+  :config
+  (direnv-mode))
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
