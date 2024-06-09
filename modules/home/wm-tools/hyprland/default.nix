@@ -9,6 +9,7 @@ in {
   };
 
   config = mkIf cfg.enable {
+    programs.hyprlock.enable = true;
     wayland.windowManager.hyprland = {
       enable = true;
       settings = {
@@ -69,6 +70,9 @@ in {
           # Window Modifications
           "$mod,F,fullscreen"
           "$mod_SHIFT,Space,togglefloating"
+          # Brightness Controls
+          ",XF86MonBrightnessUp,exec,brillo -u 150000 -A 5"
+          ",XF86MonBrightnessDown,exec,brillo -u 150000 -U 5"
         ];
       };
     };
