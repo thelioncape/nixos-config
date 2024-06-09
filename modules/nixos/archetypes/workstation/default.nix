@@ -8,6 +8,7 @@ in {
   };
 
   config = mkIf cfg.enable {
+    hardware.brillo.enable = true;
     custom = {
       suites = {
         common.enable = true;
