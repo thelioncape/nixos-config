@@ -6,6 +6,7 @@ with lib.custom; {
     emacs.enable = true;
     cli-apps = {
       rbw.enable = true;
+      direnv.enable = true;
     };
     terminals = {
       kitty.enable = true;
