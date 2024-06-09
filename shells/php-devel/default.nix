@@ -4,6 +4,6 @@ mkShell {
     php
   ];
   shellHook = ''
-    export PS1='[\[\e[92m\]php-devel@\h:\w]\\$\[\e[0m\] '
+    export PS1='\[\e[92m\][php-devel@\h:\w]\\$\[\e[0m\] '
   '';
 }
