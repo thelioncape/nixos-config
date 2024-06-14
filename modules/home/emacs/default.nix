@@ -11,12 +11,13 @@ in {
   config = mkIf cfg.enable {
     programs.emacs = {
       enable = true;
-      package = pkgs.emacs29-pgtk;
+      package = pkgs.emacs;
     };
     home.packages = with pkgs; [
       cmake
       libtool
       python3
+      fd
     ];
     home.file.initel = {
       enable = true;
