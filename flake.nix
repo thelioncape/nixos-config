@@ -9,8 +9,11 @@
       url = "github:thelioncape/lib/main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    
     nix-colors.url = "github:misterio77/nix-colors";
     apple-fonts.url = "github:braindefender/nix-apple-fonts";
+    catppuccin.url = "github:catppuccin/nix";
+
     nixos-generators.url = "github:nix-community/nixos-generators";
     nixos-generators.inputs.nixpkgs.follows = "nixpkgs";
   };
@@ -42,6 +45,11 @@
 
       systems.modules.nixos = with inputs; [
         home-manager.nixosModules.home-manager
+        catppuccin.nixosModules.catppuccin
+      ];
+
+      homes.modules = with inputs; [
+        catppuccin.homeManagerModules.catppuccin
       ];
 
       templates = import ./templates {};

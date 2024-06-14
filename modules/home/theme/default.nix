@@ -11,9 +11,12 @@ in
   config = {
     home.pointerCursor = {
       package = pkgs.catppuccin-cursors.latteMauve;
-      name = "Catppuccin-Latte-Mauve-Cursors";
+      name = "catppuccin-latte-mauve-cursors";
       size = 64;
-      gtk.enable = true;
     };
+    wayland.windowManager.hyprland.settings.env = [
+      "HYPRCURSOR_THEME, ${toString config.home.pointerCursor.name}"
+      "HYPRCURSOR_SIZE, ${toString config.home.pointerCursor.size}"
+    ];
   };
 }
