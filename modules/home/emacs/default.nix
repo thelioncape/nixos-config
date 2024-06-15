@@ -18,6 +18,8 @@ in {
     home.packages = with pkgs; [
       cmake
       fd
+      html-tidy
+      jsbeautifier
       libtool
       nixfmt
       php
@@ -26,6 +28,7 @@ in {
       python3
       ripgrep
       shellcheck
+      stylelint
     ];
     programs.pandoc = {
       enable = true;
