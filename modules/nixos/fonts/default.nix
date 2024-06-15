@@ -18,10 +18,10 @@ in {
     fonts.packages = [
       pkgs.emacs-all-the-icons-fonts
       pkgs.nerdfonts
+      (pkgs.nerdfonts.override {fonts = [ "Hack" "NerdFontsSymbolsOnly" ];})
       pkgs.noto-fonts
       pkgs.noto-fonts-cjk-sans
       pkgs.noto-fonts-emoji
-      (pkgs.nerdfonts.override {fonts = ["Hack"];})
       inputs.apple-fonts
     ]
     ++ cfg.fonts;
