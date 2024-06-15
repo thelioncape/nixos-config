@@ -19,6 +19,10 @@ in {
       cmake
       fd
       libtool
+      nixfmt
+      php
+      phpactor
+      php82Packages.composer
       python3
       ripgrep
       shellcheck
@@ -44,12 +48,6 @@ in {
       source = ./packages.el;
       target = ".config/doom/packages.el";
       executable = true;
-    };
-    home.file.emacsenv = {
-      enable = true;
-      source = ./env;
-      target = ".config/emacs/.local/env";
-      executable = false;
     };
     # Doom installation
     home.activation = {
