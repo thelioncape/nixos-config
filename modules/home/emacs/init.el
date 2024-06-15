@@ -1,479 +1,195 @@
-(setq inhibit-startup-message t)
-(scroll-bar-mode -1)      ; Disable visible scrollbar
-(tool-bar-mode -1)        ; Disable the toolbar
-(tooltip-mode -1)         ; Disable tooltips
-(set-fringe-mode 10)      ; Increase fringes
-
-(menu-bar-mode -1)        ; Disable menu bar
-(setq visible-bell t)     ; Enable visible bell
-
-(set-face-attribute 'default nil :font "SF Mono" :weight 'Regular :height 168) ; Set font
-
-(set-fontset-font t nil (font-spec :height 128 :name "Noto Sans Symbols"))
-
-(custom-theme-set-faces
- 'user
- '(variable-pitch ((t (:family "SF Pro Display" :weight normal :height 168)))))
-
-;; Initialise package source
-(require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
-(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/"))
-
-(package-initialize)
-(unless package-archive-contents)
-  (package-refresh-contents)
-
-;; Initialise use-package on non-Linux platforms
-(unless (package-installed-p 'use-package)
-  (package-install 'use-package))
-
-(require 'use-package)
-(setq use-package-always-ensure t)
-
-(use-package ivy
-  :diminish
-  :config
-  (ivy-mode 1))
-
-(use-package counsel
-  :bind (("M-x" . counsel-M-x)
-	 ("C-x b" . counsel-switch-buffer)
-	 ("C-x C-f" . counsel-find-file)
-	 :map minibuffer-local-map
-	 ("C-r" . 'counsel-minibuffer-history))
-  :config
-  (setq ivy-initial-inputs-alist nil)) ;; Don't start searches with ^
-
-(use-package helpful
-  :custom
-  (counsel-describe-function-function #'helpful-callable)
-  (counsel-describe-variable-function #'helpful-variable)
-  :bind
-  ([remap describe-function] . counsel-describe-function)
-  ([remap describe-command] . helpful-command)
-  ([remap describe-variable] . counsel-describe-variable)
-  ([remap describe-key] . helpful-key))
-
-(use-package ivy-rich
-  :init
-  (ivy-rich-mode 1))
-
-(use-package doom-modeline
-  :init (doom-modeline-mode 1))
-
-(use-package all-the-icons)
-
-(use-package autothemer)
-
-(setq custom--inhibit-theme-enable nil) ;; Allow themes to be applied
-
-(use-package gruvbox-theme)
-
-(use-package which-key
-  :diminish
-  :config
-  (which-key-mode))
-
-(use-package lsp-mode
-  :commands (lsp lsp-deferred)
-  :init
-  (setq lsp-keymap-prefix "C-c l")
-  :config
-  (define-key lsp-mode-map (kbd "C-c l") lsp-command-map)
-  (setq lsp-enable-snippet nil)
-  (setq lsp-disabled-clients '(php-ls))
-  :hook
-  '((lsp-mode . lsp-enable-which-key-integration)
-    ((html-mode) . lsp-mode)
-    ((go-mode) . lsp-mode)
-    ((powershell-mode) . lsp-mode)))
-
-(column-number-mode)
-(global-display-line-numbers-mode t)
-
-(dolist (mode '(org-mode-hook
-		term-mode-hook
-		shell-mode-hook
-		eshell-mode-hook
-		vterm-mode-hook))
-  (add-hook mode (lambda () (display-line-numbers-mode 0))))
-
-(use-package lsp-ui
-  :hook (lsp-mode . lsp-ui-mode)
-  :config
-  (setq lsp-ui-doc-enable t))
-
-(setq gc-cons-threshold 100000000)
-(setq read-process-output-max (* 1024 1024))
-
-(use-package rainbow-delimiters
-  :hook (prog-mode . rainbow-delimiters-mode))
-
-(defun rune/evil-hook ()
-  (dolist (mode '(custom-mode
-		  eshell-mode
-		  git-rebase-mode
-		  erc-mode
-		  circe-server-mode
-		  circe-chat-mode
-		  circe-query-mode
-		  sauron-mode
-		  term-mode
-		  ;;keepass-mode
-		  ))
-    (add-to-list 'evil-emacs-state-modes mode)))
-
-(use-package evil
-  :init
-  (setq evil-want-integration t)
-  (setq evil-want-keybinding nil)
-  (setq evil-want-C-u-scroll t)
-  (setq evil-want-C-i-jump nil)
-  :hook (evil-mode . rune/evil-hook)
-  :config
-  (evil-mode 1)
-  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
-  (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
-
-  (evil-set-initial-state 'messages-buffer-mode 'normal)
-  (evil-set-initial-state 'dashboard-mode 'normal))
-
-(evil-mode 1)
-
-(use-package projectile
-  :diminish projectile-mode
-  :config (projectile-mode)
-  :bind-keymap
-  ("C-c p" . projectile-command-map)
-  :init
-  (when (file-directory-p "~/Development")
-    (setq projectile-project-search-path '("~/Development")))
-  (setq projectile-switch-project-action #'projectile-dired))
-
-(use-package magit)
-
-(use-package evil-collection
-  :after evil
-  :config
-  (evil-collection-init))
-
-;; Set up SSH key agent for use with magit
-(use-package exec-path-from-shell
-  :config
-  (setq exec-path-from-shell-variables '("SSH_AGENT_PID" "SSH_AUTH_SOCK" "WAYLAND_DISPLAY"))
-  :hook (vterm-mode . exec-path-from-shell-initialize))
-
-(use-package vterm)
-
-(use-package all-the-icons-dired
-  :hook (dired-mode . all-the-icons-dired-mode))
-
-(defun tlc/dired-init ()
-  "Function to run when dired is started."
-  (dired-hide-details-mode 1))
-
-(add-hook 'dired-mode-hook 'tlc/dired-init)
-
-;;(use-package keepass-mode)
-
-(global-set-key (kbd "C-c t") 'vterm)
-(global-set-key (kbd "C-c m") 'mu4e)
-
-;; set default shell to bash for all ssh connections
-(add-to-list 'tramp-connection-properties
-	     (list (regexp-quote "/ssh")
-		   "remote-shell" "/bin/bash"))
-
-(setq tramp-shell-prompt-pattern "^[^$>\n]*[#$%>] *\\(\[[0-9;]*[a-zA-Z] *\\)*")
-
-(require 'org-faces)
-
-(defun tlc/org-mode-setup ()
-  (org-indent-mode)
-  (variable-pitch-mode 1)
-  (visual-line-mode 1)
-  (setq evil-auto-indent nil))
-
-(defun tlc/org-font-setup ()
-  (dolist (face '((org-level-1 . 1.2)
-		  (org-level-2 . 1.1)
-		  (org-level-3 . 1.05)
-		  (org-level-4 . 1.0)
-		  (org-level-5 . 1.1)
-		  (org-level-6 . 1.1)
-		  (org-level-7 . 1.1)
-		  (org-level-8 . 1.1)))
-    (set-face-attribute (car face) nil :font "SF Pro Display" :weight 'Regular :height (cdr face)))
-
-  ;; Replace list hyphen with bullet point
-  (font-lock-add-keywords 'org-mode
-			  '(("^ *\\([-]\\) "
-			     (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
-  ;; Ensure that anything that should be fixed-pitch in Org files appears that way
-  (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
-  (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
-  (set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
-  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
-  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
-  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-  (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
-
-(use-package org
-  :hook (org-mode . tlc/org-mode-setup)
-  :config
-  (tlc/org-font-setup)
-  (advice-add 'org-refile :after 'org-save-all-org-buffers)
-  (custom-theme-set-faces
-   'user
-   '(fixed-pitch ((t ( :family "SF Mono" :height 128)))))
-  :custom
-  (org-export-with-author nil)
-  (org-ellipsis " ")
-  (org-hide-emphasis-markers t)
-
-  (org-agenda-files '("~/OrgFiles/Tasks.org"))
-
-  (org-capture-templates
-   '(("t" "Todo" entry (file+headline "~/OrgFiles/Tasks.org" "Active")
-      (file "~/RoamNotes/Templates/Todo.org"))
-     ("m" "Email Workflow")
-       ("mf" "Follow Up" entry (file+olp "~/OrgFiles/Tasks.org" "Active")
-	  "* TODO %a\n  %i")))
-  
-  (org-directory "~/OrgFiles")
-
-  (org-agenda-start-with-log-mode nil)
-  (org-log-done 'time)
-  (org-log-into-drawer t)
-  (org-refile-targets
-   '(("~/OrgFiles/Archive.org" :maxlevel . 1)
-     ("~/OrgFiles/Tasks.org" :maxlevel . 1)))
-  (org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)"))))
-
-(global-set-key (kbd "C-c c") 'org-capture)
-(global-set-key (kbd "C-c a") 'org-agenda)
-
-(use-package org-bullets
-  :hook (org-mode . org-bullets-mode)
-  :custom
-  (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
-
-(use-package org-roam
-  :init
-  (setq org-roam-v2-ack t)
-  :custom
-  (org-roam-directory "~/RoamNotes")
-  (org-roam-completion-everywhere t)
-  (org-roam-capture-templates
-   '(("d" "default" plain
-      "%?"
-      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-      :unnarrowed t)
-     ("c" "Change Request" plain
-      (file "~/RoamNotes/Templates/ChangeRequest.org")
-      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-      :unnarrowed t)))
-  (org-roam-dailies-capture-templates
-   '(("d" "default" entry "* %<%k:%M> - %?"
-      :if-new (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n"))))
-  :bind (("C-c n l" . org-roam-buffer-toggle)
-	 ("C-c n f" . org-roam-node-find)
-	 ("C-c n i" . org-roam-node-insert)
-	 :map org-mode-map
-	 ("C-M-i" . completion-at-point)
-	 :map org-roam-dailies-map
-	 ("Y" . org-roam-dailies-capture-yesterday)
-	 ("T" . org-roam-dailies-capture-tomorrow))
-  :bind-keymap
-  ("C-c n d" . org-roam-dailies-map)
-  :config
-  (require 'org-roam-dailies) ;; Ensuire the keymap is available
-  (org-roam-db-autosync-enable))
-
-(defun tlc/org-mode-visual-fill ()
-  (setq visual-fill-column-width 125
-	visual-fill-column-center-text t)
-  (visual-fill-column-mode 1))
-
-(use-package visual-fill-column
-  :hook (org-mode . tlc/org-mode-visual-fill))
-
-(use-package highlight-indent-guides
-  :hook ((prog-mode . highlight-indent-guides-mode)
-	 (yaml-mode . highlight-indent-guides-mode))
-  :init (highlight-indent-guides-auto-set-faces))
-
-(use-package flycheck
-  :init (global-flycheck-mode))
-
-(use-package ob-powershell)
-
-(use-package powershell)
-
-(use-package yaml-mode
-  :config
-  (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
-  (add-to-list 'auto-mode-alist '("\\.yaml\\'" . yaml-mode))
-  (add-hook 'yaml-mode-hook #'(lambda () (ansible 1)))
-  (add-hook 'yaml-mode-hook 'lsp-deferred))
-
-(org-babel-do-load-languages
- 'org-babel-load-languages
- (quote (
-	 (powershell . t)
-	 (shell . t))))
-
-(use-package company)
-
-(use-package systemd)
-
-(use-package company-go)
-
-(use-package go-mode
-  :defer t
-  :config
-  (add-hook 'go-mode-hook 'lsp-deferred)
-  (add-hook 'go-mode-hook
-	    (lambda ()
-	      (add-hook 'before-save-hook 'ime-go-before-save)))
-  (require 'lsp-go)
-  (require 'lsp-pyls)
-  :custom
-  (lsp-go-gopls-server-path "~/go/bin/gopls"))
-
-(setq backup-directory-alist '(("." . "~/.local/cache/emacs/backup"))
-;  backup-by-copying t    ; Don't delink hardlinks
-;  version-control t      ; Use version numbers on backups
-;  delete-old-versions t  ; Automatically delete excess backups
-;  kept-new-versions 20   ; how many of the newest versions to keep
-;  kept-old-versions 5    ; and how many of the old
-      )
-
-(use-package treemacs)
-
-(customize-set-variable
- 'tramp-password-prompt-regexp
- (concat
-  "^.*"
-  (regexp-opt
-   '("Verification code" "Password"
-     "passphrase" "Passphrase")
-   t)
-  ".*:\0? *"))
-
-(use-package vlf)
-
-(use-package restclient)
-
-(use-package company-restclient)
-
-(use-package jinja2-mode)
-
-(use-package ansible)
-
-(use-package company-ansible)
-
-(use-package lsp-treemacs)
-
-(use-package csv-mode)
-
-(use-package ox-reveal
-  :custom
-  org-reveal-root "file:///home/user/Development/reveal.js-4.5.0")
-
-(use-package ox-pandoc
-  :after org
-  :init (add-to-list 'org-export-backends 'pandoc))
-
-(defun ikl-mu4e-refile-folder (msg)
-  "Function for choosing the refile folder
-   MSG is a message p-list from mu4e."
-  (cond
-   ;; BMS messages
-   ((mu4e-message-contact-field-matches msg :from
-					"support@italik.co.uk")
-    "/LocalArchive/BMS")
-   (t "/LocalArchive/Inbox")))
-
-(use-package mu4e
-  :ensure nil
-  :custom
-  (mu4e-sent-messages-behavior 'delete)
-  :config
-  ;; This is set to 't' to avoid mail syncing issues when using mbsync
-  (setq mu4e-change-filenames-when-moving t)
-
-  ;; Refresh mail using isync every minute
-  (setq mu4e-update-interval (* 1 60))
-  (setq mu4e-get-mail-command "mbsync -c ~/.config/mbsync/mbsyncrc -aqq")
-  (setq mu4e-maildir "~/Mail/Work")
-
-  (setq user-mail-address "ben.standerline@italik.co.uk")
-
-  (setq mu4e-drafts-folder "/Drafts")
-  (setq mu4e-sent-folder "/Sent")
-  (setq mu4e-trash-folder "/LocalArchive/Trash")
-  (setq mu4e-refile-folder 'ikl-mu4e-refile-folder)
-
-  (setq smtpmail-smtp-server "localhost"
-	smtpmail-smtp-service 1025
-	smtpmail-stream-type 'plain
-	smtpmail-smtp-user "ben.standerline@italik.co.uk")
-
-  (setq mu4e-compose-format-flowed t)
-
-  (setq mu4e-compose-signature
-	(concat
-	 "Ben Standerline\n"
-	 "Italik Ltd | Technical Specialist\n"
-	 "E: ben.standerline@italik.co.uk\n"
-	 "T: 01937 848 380"))
-
-  (setq message-send-mail-function 'smtpmail-send-it)
-
-  (setq mu4e-maildir-shortcuts
-	'(("/Inbox"              . ?i)
-	  ("/Sent"               . ?s)
-	  ("/LocalArchive/Trash" . ?t)
-	  ("/Drafts"             . ?d)
-	  ("/LocalArchive/Inbox" . ?a)))
-
-  (mu4e t))
-
-(use-package mu4e-org
-  :ensure nil)
-
-(use-package yasnippet
-  :config
-  (yas-global-mode 1))
-
-(use-package nix-mode
-  :mode "\\.nix\\'")
-
-(use-package php-mode
-  :mode "\\.inc\\'"
-  :hook (php-mode . rainbow-delimiters-mode)
-  :config
-  (setq php-mode-template-compatibility nil))
-
-(use-package direnv
-  :config
-  (direnv-mode))
-
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(fixed-pitch ((t (:family "SF Mono" :height 128))))
- '(variable-pitch ((t (:family "SF Pro Display" :weight normal :height 168)))))
-(put 'dired-find-alternate-file 'disabled nil)
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(org-mime lsp-treemacs company-ansible ansible jinja2-mode yasnippet yaml-mode which-key vterm vlf visual-fill-column use-package treemacs systemd rainbow-delimiters projectile powershell ox-reveal ox-pandoc org-roam org-re-reveal org-bullets ob-powershell magit lsp-ui ivy-rich highlight-indent-guides helpful gruvbox-theme flycheck exec-path-from-shell evil-collection doom-modeline csv-mode counsel company-restclient company-go all-the-icons-dired)))
-
+;;; init.el -*- lexical-binding: t; -*-
+
+;; This file controls what Doom modules are enabled and what order they load
+;; in. Remember to run 'doom sync' after modifying it!
+
+;; NOTE Press 'SPC h d h' (or 'C-h d h' for non-vim users) to access Doom's
+;;      documentation. There you'll find a link to Doom's Module Index where all
+;;      of our modules are listed, including what flags they support.
+
+;; NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
+;;      'C-c c k' for non-vim users) to view its documentation. This works on
+;;      flags as well (those symbols that start with a plus).
+;;
+;;      Alternatively, press 'gd' (or 'C-c c d') on a module to browse its
+;;      directory (for easy access to its source code).
+
+(doom! :input
+       ;;bidi              ; (tfel ot) thgir etirw uoy gnipleh
+       ;;chinese
+       ;;japanese
+       ;;layout            ; auie,ctsrnm is the superior home row
+
+       :completion
+       company           ; the ultimate code completion backend
+       ;;(corfu +orderless)  ; complete with cap(f), cape and a flying feather!
+       ;;helm              ; the *other* search engine for love and life
+       ;;ido               ; the other *other* search engine...
+       ;;ivy               ; a search engine for love and life
+       vertico           ; the search engine of the future
+
+       :ui
+       ;;deft              ; notational velocity for Emacs
+       doom              ; what makes DOOM look the way it does
+       doom-dashboard    ; a nifty splash screen for Emacs
+       ;;doom-quit         ; DOOM quit-message prompts when you quit Emacs
+       ;;(emoji +unicode)  ; 🙂
+       hl-todo           ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
+       ;;hydra
+       ;;indent-guides     ; highlighted indent columns
+       ;;ligatures         ; ligatures and symbols to make your code pretty again
+       ;;minimap           ; show a map of the code on the side
+       modeline          ; snazzy, Atom-inspired modeline, plus API
+       ;;nav-flash         ; blink cursor line after big motions
+       ;;neotree           ; a project drawer, like NERDTree for vim
+       ophints           ; highlight the region an operation acts on
+       (popup +defaults)   ; tame sudden yet inevitable temporary windows
+       ;;tabs              ; a tab bar for Emacs
+       ;;treemacs          ; a project drawer, like neotree but cooler
+       ;;unicode           ; extended unicode support for various languages
+       (vc-gutter +pretty) ; vcs diff in the fringe
+       vi-tilde-fringe   ; fringe tildes to mark beyond EOB
+       ;;window-select     ; visually switch windows
+       workspaces        ; tab emulation, persistence & separate workspaces
+       ;;zen               ; distraction-free coding or writing
+
+       :editor
+       (evil +everywhere); come to the dark side, we have cookies
+       file-templates    ; auto-snippets for empty files
+       fold              ; (nigh) universal code folding
+       ;;(format +onsave)  ; automated prettiness
+       ;;god               ; run Emacs commands without modifier keys
+       ;;lispy             ; vim for lisp, for people who don't like vim
+       ;;multiple-cursors  ; editing in many places at once
+       ;;objed             ; text object editing for the innocent
+       ;;parinfer          ; turn lisp into python, sort of
+       ;;rotate-text       ; cycle region at point between text candidates
+       snippets          ; my elves. They type so I don't have to
+       ;;word-wrap         ; soft wrapping with language-aware indent
+
+       :emacs
+       dired             ; making dired pretty [functional]
+       electric          ; smarter, keyword-based electric-indent
+       ;;ibuffer         ; interactive buffer management
+       undo              ; persistent, smarter undo for your inevitable mistakes
+       vc                ; version-control and Emacs, sitting in a tree
+
+       :term
+       ;;eshell            ; the elisp shell that works everywhere
+       ;;shell             ; simple shell REPL for Emacs
+       ;;term              ; basic terminal emulator for Emacs
+       ;;vterm             ; the best terminal emulation in Emacs
+
+       :checkers
+       syntax              ; tasing you for every semicolon you forget
+       ;;(spell +flyspell) ; tasing you for misspelling mispelling
+       ;;grammar           ; tasing grammar mistake every you make
+
+       :tools
+       ;;ansible
+       ;;biblio            ; Writes a PhD for you (citation needed)
+       ;;collab            ; buffers with friends
+       ;;debugger          ; FIXME stepping through code, to help you add bugs
+       ;;direnv
+       ;;docker
+       ;;editorconfig      ; let someone else argue about tabs vs spaces
+       ;;ein               ; tame Jupyter notebooks with emacs
+       (eval +overlay)     ; run code, run (also, repls)
+       lookup              ; navigate your code and its documentation
+       ;;lsp               ; M-x vscode
+       magit             ; a git porcelain for Emacs
+       ;;make              ; run make tasks from Emacs
+       ;;pass              ; password manager for nerds
+       ;;pdf               ; pdf enhancements
+       ;;prodigy           ; FIXME managing external services & code builders
+       ;;rgb               ; creating color strings
+       ;;taskrunner        ; taskrunner for all your projects
+       ;;terraform         ; infrastructure as code
+       ;;tmux              ; an API for interacting with tmux
+       ;;tree-sitter       ; syntax and parsing, sitting in a tree...
+       ;;upload            ; map local to remote projects via ssh/ftp
+
+       :os
+       (:if (featurep :system 'macos) macos)  ; improve compatibility with macOS
+       ;;tty               ; improve the terminal Emacs experience
+
+       :lang
+       ;;agda              ; types of types of types of types...
+       ;;beancount         ; mind the GAAP
+       ;;(cc +lsp)         ; C > C++ == 1
+       ;;clojure           ; java with a lisp
+       ;;common-lisp       ; if you've seen one lisp, you've seen them all
+       ;;coq               ; proofs-as-programs
+       ;;crystal           ; ruby at the speed of c
+       ;;csharp            ; unity, .NET, and mono shenanigans
+       ;;data              ; config/data formats
+       ;;(dart +flutter)   ; paint ui and not much else
+       ;;dhall
+       ;;elixir            ; erlang done right
+       ;;elm               ; care for a cup of TEA?
+       emacs-lisp        ; drown in parentheses
+       ;;erlang            ; an elegant language for a more civilized age
+       ;;ess               ; emacs speaks statistics
+       ;;factor
+       ;;faust             ; dsp, but you get to keep your soul
+       ;;fortran           ; in FORTRAN, GOD is REAL (unless declared INTEGER)
+       ;;fsharp            ; ML stands for Microsoft's Language
+       ;;fstar             ; (dependent) types and (monadic) effects and Z3
+       ;;gdscript          ; the language you waited for
+       ;;(go +lsp)         ; the hipster dialect
+       ;;(graphql +lsp)    ; Give queries a REST
+       ;;(haskell +lsp)    ; a language that's lazier than I am
+       ;;hy                ; readability of scheme w/ speed of python
+       ;;idris             ; a language you can depend on
+       ;;json              ; At least it ain't XML
+       ;;(java +lsp)       ; the poster child for carpal tunnel syndrome
+       ;;javascript        ; all(hope(abandon(ye(who(enter(here))))))
+       ;;julia             ; a better, faster MATLAB
+       ;;kotlin            ; a better, slicker Java(Script)
+       ;;latex             ; writing papers in Emacs has never been so fun
+       ;;lean              ; for folks with too much to prove
+       ;;ledger            ; be audit you can be
+       ;;lua               ; one-based indices? one-based indices
+       markdown          ; writing docs for people to ignore
+       ;;nim               ; python + lisp at the speed of c
+       ;;nix               ; I hereby declare "nix geht mehr!"
+       ;;ocaml             ; an objective camel
+       org               ; organize your plain life in plain text
+       ;;php               ; perl's insecure younger brother
+       ;;plantuml          ; diagrams for confusing people more
+       ;;purescript        ; javascript, but functional
+       ;;python            ; beautiful is better than ugly
+       ;;qt                ; the 'cutest' gui framework ever
+       ;;racket            ; a DSL for DSLs
+       ;;raku              ; the artist formerly known as perl6
+       ;;rest              ; Emacs as a REST client
+       ;;rst               ; ReST in peace
+       ;;(ruby +rails)     ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
+       ;;(rust +lsp)       ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
+       ;;scala             ; java, but good
+       ;;(scheme +guile)   ; a fully conniving family of lisps
+       sh                ; she sells {ba,z,fi}sh shells on the C xor
+       ;;sml
+       ;;solidity          ; do you need a blockchain? No.
+       ;;swift             ; who asked for emoji variables?
+       ;;terra             ; Earth and Moon in alignment for performance.
+       ;;web               ; the tubes
+       ;;yaml              ; JSON, but readable
+       ;;zig               ; C, but simpler
+
+       :email
+       ;;(mu4e +org +gmail)
+       ;;notmuch
+       ;;(wanderlust +gmail)
+
+       :app
+       ;;calendar
+       ;;emms
+       ;;everywhere        ; *leave* Emacs!? You must be joking
+       ;;irc               ; how neckbeards socialize
+       ;;(rss +org)        ; emacs as an RSS reader
+       ;;twitter           ; twitter client https://twitter.com/vnought
+
+       :config
+       ;;literate
+       (default +bindings +smartparens))
