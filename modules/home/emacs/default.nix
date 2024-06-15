@@ -45,6 +45,12 @@ in {
       target = ".config/doom/packages.el";
       executable = true;
     };
+    home.file.emacsenv = {
+      enable = true;
+      source = ./env;
+      target = ".config/emacs/.local/env";
+      executable = false;
+    };
     # Doom installation
     home.activation = {
       doomEmacs = inputs.home-manager.lib.hm.dag.entryAfter ["writeBoundry"] ''
