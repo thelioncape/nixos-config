@@ -4,7 +4,7 @@ mkShell {
     php
     phpactor
     php82Packages.composer
-    npm
+    nodejs_22
   ];
   shellHook = ''
     export PS1='\[\e[92m\][php-devel@\h:\w]\\$\[\e[0m\] '
