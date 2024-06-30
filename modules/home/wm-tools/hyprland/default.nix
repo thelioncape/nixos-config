@@ -9,6 +9,9 @@ in {
   };
 
   config = mkIf cfg.enable {
+    import = [
+      ./hyperpaper.nix
+    ]
     programs.hyprlock.enable = true;
     wayland.windowManager.hyprland = {
       enable = true;
