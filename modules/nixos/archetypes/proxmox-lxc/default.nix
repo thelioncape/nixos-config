@@ -21,5 +21,6 @@ in {
       serviceConfig.Restart = "always"; # restart when session is closed
     };
     boot.isContainer = true;
+    snowfallorg.users.sophie.home.enable = false;
   };
 }
