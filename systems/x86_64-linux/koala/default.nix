@@ -1,7 +1,11 @@
-{ lib, pkgs, ... }:
+{ lib, pkgs, inputs, ... }:
 with lib;
 with lib.custom; {
-  imports = [./hardware-configuration.nix];
+  imports = [
+    ./hardware-configuration.nix
+
+    inputs.nixos-hardware.nixosModules.framework-13-7040-amd
+  ];
 
   custom = {
     archetypes = {
@@ -84,14 +88,6 @@ with lib.custom; {
       allowDiscards = true;
     };
   };
-
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
 
   # List services that you want to enable:
 
