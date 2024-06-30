@@ -11,6 +11,11 @@ in {
   config = mkIf cfg.enable {
     programs.kitty = {
       enable = true;
+      font = {
+        name = "SF Mono";
+        size = 12;
+      };
+      theme = "Catppuccin-Latte";
     };
   };
 }
