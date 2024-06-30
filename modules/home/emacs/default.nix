@@ -20,6 +20,7 @@ in {
       fd
       html-tidy
       jsbeautifier
+      ledger
       libtool
       nixfmt
       php
