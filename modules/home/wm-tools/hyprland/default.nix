@@ -9,9 +9,6 @@ in {
   };
 
   config = mkIf cfg.enable {
-    import = [
-      ./hyperpaper.nix
-    ]
     programs.hyprlock.enable = true;
     wayland.windowManager.hyprland = {
       enable = true;
@@ -37,6 +34,10 @@ in {
         ];
         exec-once = [
           "waybar"
+        ];
+        windowrulev2 = [
+          "opacity 0.8 override 0.8 override,class:(kitty)"
+          "opacity 0.8 override 0.8 override,class:(emacs)"
         ];
         misc = {
           disable_hyprland_logo = true;
@@ -136,6 +137,19 @@ in {
           ",XF86AudioMute,exec,wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
           ",XF86AudioLowerVolume,exec,wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
           ",XF86AudioRaiseVolume,exec,wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 5%+"
+        ];
+      };
+    };
+    services.hyprpaper = {
+      enable = true;
+      settings = {
+        ipc = "off";
+        splash = false;
+        preload = [
+          "${pkgs.custom.wallpapers.nix-minimal-latte}"
+        ];
+        wallpaper = [
+          "eDP-1,${pkgs.custom.wallpapers.nix-minimal-latte}"
         ];
       };
     };
