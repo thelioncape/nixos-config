@@ -19,7 +19,15 @@ in {
         input = {
           kb_layout = "gb";
           kb_options = [ "ctrl:nocaps" ];
-          touchpad = { natural_scroll = true; };
+          touchpad = {
+            natural_scroll = true;
+            disable_while_typing = true;
+            drag_lock = true;
+          };
+        };
+        gestures = {
+          workspace_swipe = true;
+          workspace_swipe_fingers = 3;
         };
         monitor = [
           "eDP-1,2256x1504@60,0x0,1.566667"
